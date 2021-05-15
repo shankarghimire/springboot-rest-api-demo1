@@ -3,9 +3,12 @@ package com.example.springrestapi.entity;
 import org.springframework.context.annotation.Bean;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.Serializable;
 
-
-public class Course {
+@Entity
+public class Course implements Serializable {
+    @Id
     private Long id;
     private String title;
     private String description;

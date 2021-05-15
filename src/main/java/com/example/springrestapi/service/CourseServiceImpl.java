@@ -1,6 +1,8 @@
 package com.example.springrestapi.service;
 
+import com.example.springrestapi.dao.CourseDao;
 import com.example.springrestapi.entity.Course;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,51 +12,72 @@ import java.util.stream.Collectors;
 @Service
 public class CourseServiceImpl implements CourseService{
 
+    @Autowired
+    private CourseDao courseDao;
+
     private List<Course> list;
 
     public CourseServiceImpl() {
-        list  = new ArrayList<>();
-        list.add(new Course(101L, "Java","Basic of Java"));
-        list.add(new Course(102L,"Python","Basic Python"));
+//        list  = new ArrayList<>();
+//        list.add(new Course(101L, "Java","Basic of Java"));
+//        list.add(new Course(102L,"Python","Basic Python"));
 
     }
 
     @Override
     public List<Course> getCourses() {
-        return list;
+
+        //return list;
+        return courseDao.findAll();
     }
 
     @Override
     public Course getCourse(Long courseId) {
+//        Course c = null;
+//        for(Course course: list){
+//            if(course.getId()== courseId){
+//                c=course;
+//                break;
+//            }
+//        }
+//        return c;
+
         Course c = null;
-        for(Course course: list){
-            if(course.getId()== courseId){
-                c=course;
+        for(Course temp: courseDao.findAll()){
+            if(temp.getId() == courseId){
+                c = temp;
                 break;
             }
         }
         return c;
+        //return courseDao.getOne(courseId);
+        //return courseDao.findById(courseId);
     }
 
     @Override
     public Course addCourse(Course course) {
-        list.add(course);
+//        list.add(course);
+        courseDao.save(course);
         return course;
     }
 
     @Override
     public Course updateCourse(Course course) {
-        list.forEach(e->{
-            if(e.getId() == course.getId()){
-                e.setTitle(course.getTitle());
-                e.setDescription(course.getDescription());
-            }
-        });
+//        list.forEach(e->{
+//            if(e.getId() == course.getId()){
+//                e.setTitle(course.getTitle());
+//                e.setDescription(course.getDescription());
+//            }
+//        });
+
+        courseDao.save(course);
         return course;
     }
 
     @Override
     public void deleteCourse(long parseLong) {
-        list = this.list.stream().filter(e->e.getId() != parseLong).collect(Collectors.toList());
+//        list = this.list.stream().filter(e->e.getId() != parseLong).collect(Collectors.toList());
+        Course temp = courseDao.getOne(parseLong);
+        courseDao.delete(temp);
     }
 }
